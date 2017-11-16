@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Игорь Кошелев](https://up.htmlacademy.ru/javascript/11/user/242071).
-* Наставник: `Неизвестно`.
+* Наставник: `Данил Чекалин`.
 
 ---
 
