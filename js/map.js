@@ -25,7 +25,7 @@ titles.sort(compareRandom);
 avatars.sort(compareRandom);
 var featuresRandom = features.sort(compareRandom).splice(randomValue(0, 3), randomValue(3, 5));
 
-for (var i = 0; i < 7; i++) {
+for (var i = 0; i < 8; i++) {
   // Объект с рандомным значением x и y
   var randomLocation = {
     x: randomValue(300, 900),
@@ -67,7 +67,7 @@ var pinElementContainer = document.querySelector('.map__pins');
 var cardElementContainer = document.querySelector('.map');
 
 // Шаблон для данных
-var cardTemplate = document.querySelector('template').content;
+var cardTemplate = document.querySelector('template').content.querySelector('article.map__card');
 
 var fragmentCard = document.createDocumentFragment();
 
