@@ -11,21 +11,20 @@ var compareRandom = function () {
   return Math.random() - 0.5;
 };
 
-var obj = [];
-
 // Массивы с данными
 var avatars = ['img/avatars/user01.png', 'img/avatars/user02.png', 'img/avatars/user03.png', 'img/avatars/user04.png', 'img/avatars/user05.png', 'img/avatars/user06.png', 'img/avatars/user07.png', 'img/avatars/user08.png'];
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var types = ['flat', 'house', 'bungalo'];
 var times = ['12:00', '13:00', '14:00'];
 var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var obj = [];
 
 // Сортировка массивов случайным образом
 titles.sort(compareRandom);
 avatars.sort(compareRandom);
 var featuresRandom = features.sort(compareRandom).splice(randomValue(0, 3), randomValue(3, 5));
 
-for (var i = 0; i < 7; i++) {
+for (var i = 0; i < 8; i++) {
   // Объект с рандомным значением x и y
   var randomLocation = {
     x: randomValue(300, 900),
@@ -67,29 +66,37 @@ var pinElementContainer = document.querySelector('.map__pins');
 var cardElementContainer = document.querySelector('.map');
 
 // Шаблон для данных
-var cardTemplate = document.querySelector('template').content;
+var cardTemplate = document.querySelector('template').content.querySelector('article.map__card');
 
 var fragmentCard = document.createDocumentFragment();
+var fragmentPin = document.createDocumentFragment();
 
 // Функция генерирования меток на карте
 var pinTemplateEdit = function (pin) {
-  var pinElement = '<button style="left:' + (pin.location.x - 20) + 'px; top:' + (pin.location.y - 40) + 'px;" class="map__pin"><img src="' + pin.author.avatar + '" width="40" height="40" draggable="false"></button>';
-  return pinElement;
+
+  var button = document.createElement('button');
+  button.style.left = (pin.location.x - 20) + 'px';
+  button.style.top = (pin.location.y - 40) + 'px';
+  button.classList.add('map__pin');
+  var img = document.createElement('img');
+  img.src = pin.author.avatar;
+  img.width = '40';
+  img.height = '40';
+  img.draggable = false;
+  button.appendChild(img);
+
+  return button;
 };
 
 // Функция генерирования объявления
 var cardTemplateEdit = function (card) {
 
   var cardElement = cardTemplate.cloneNode(true);
-  // Заголовок объявления
-  cardElement.querySelector('h3').textContent = card.offer.title;
-  // Адрес
-  cardElement.querySelector('p small').textContent = card.offer.address;
-  // Цена
-  cardElement.querySelector('.popup__price').innerHTML = card.offer.price + '&#8381;/ночь';
+  cardElement.querySelector('h3').textContent = card.offer.title; // Заголовок объявления
+  cardElement.querySelector('p small').textContent = card.offer.address; // Адрес
+  cardElement.querySelector('.popup__price').innerHTML = card.offer.price + '&#8381;/ночь'; // Цена
 
-  // Тип жилья
-  if (card.offer.type === 'flat') {
+  if (card.offer.type === 'flat') { // Тип жилья
     cardElement.querySelector('h4').textContent = 'Квартира';
   } else if (card.offer.type === 'bungalo') {
     cardElement.querySelector('h4').textContent = 'Бунгало';
@@ -97,11 +104,8 @@ var cardTemplateEdit = function (card) {
     cardElement.querySelector('h4').textContent = 'Дом';
   }
 
-  // Количество гостей и комнат
-  cardElement.querySelector('h4 + p').innerHTML = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
-
-  // Время заезда и выезда
-  cardElement.querySelector('p:nth-child(8)').innerHTML = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
+  cardElement.querySelector('h4 + p').innerHTML = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей'; // Количество гостей и комнат
+  cardElement.querySelector('p:nth-child(8)').innerHTML = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout; // Время заезда и выезда
 
   // Все доступные удобства в квартире
 
@@ -123,7 +127,8 @@ var cardTemplateEdit = function (card) {
 
 for (var j = 0; j < obj.length; j++) {
   fragmentCard.appendChild(cardTemplateEdit(obj[j]));
-  pinElementContainer.insertAdjacentHTML('beforeend', pinTemplateEdit(obj[j]));
+  fragmentPin.appendChild(pinTemplateEdit(obj[j]));
 }
 
 cardElementContainer.insertBefore(fragmentCard, document.querySelector('.map__filters-container'));
+pinElementContainer.appendChild(fragmentPin);
