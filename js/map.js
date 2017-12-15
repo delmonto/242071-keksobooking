@@ -1,13 +1,11 @@
 'use strict';
 
 (function () {
-  var mainPin = document.querySelector('.map__pin--main'); // Большой пин с кексом
-
   window.ads = window.generateAdsInfo();
   window.addPinsToFragment(window.ads);
   window.disableForm(true);
 
-  mainPin.addEventListener('mouseup', function () {
+  window.mainPin.addEventListener('mouseup', function () {
     window.layoutActivate();
     // Добавляю все пины в массив
     var mapPins = document.querySelectorAll('.map__pin');
