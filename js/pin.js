@@ -28,9 +28,6 @@
     }
   };
 
-  console.log(window.mainPin.offsetLeft);
-  console.log(window.mainPin.offsetTop);
-
   window.mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
