@@ -9,10 +9,10 @@
   var roomNumber = document.querySelector('#room_number');
   var roomCapacity = document.querySelector('#capacity');
   var title = document.querySelector('#title');
-  var address = document.querySelector('#address');
   var price = document.querySelector('#price');
   var map = document.querySelector('.map'); // Карта
   var pinElementContainer = document.querySelector('.map__pins'); // Тут будут отрисованы пины
+  window.address = document.querySelector('#address');
 
   // Функция присваивает одно занчение другому
   function syncTime(value1, value2) {
@@ -93,13 +93,13 @@
   });
 
   // Проверка адреса
-  address.addEventListener('invalid', function () {
-    if (address.validity.valueMissing) {
-      address.setCustomValidity('Обязательное поле');
-      address.style.border = '2px solid red';
+  window.address.addEventListener('invalid', function () {
+    if (window.address.validity.valueMissing) {
+      window.address.setCustomValidity('Обязательное поле');
+      window.address.style.border = '2px solid red';
     } else {
-      address.setCustomValidity('');
-      address.style.border = 'none';
+      window.address.setCustomValidity('');
+      window.address.style.border = 'none';
     }
   });
 
