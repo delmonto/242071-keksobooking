@@ -14,66 +14,72 @@
   var pinElementContainer = document.querySelector('.map__pins'); // Тут будут отрисованы пины
   window.address = document.querySelector('#address');
 
-  // Функция присваивает одно занчение другому
-  function syncTime(value1, value2) {
-    value1.selectedIndex = value2.selectedIndex;
-  }
+  window.form = {
+    // Включить / Выключить форму
+    disableForm: function (enable) {
+      for (var i = 0; i < formFieldsets.length; i++) {
+        formFieldsets[i].disabled = enable;
+      }
+      document.querySelector('.notice__form').classList.toggle('notice__form--disabled', enable);
+    },
 
-  // Включить / Выключить форму
-  window.disableForm = function (enable) {
-    for (var i = 0; i < formFieldsets.length; i++) {
-      formFieldsets[i].disabled = enable;
+    // Активации формы и карты
+    layoutActivate: function () {
+      map.classList.remove('map--faded');
+      pinElementContainer.appendChild(window.fragmentPin);
+      window.form.disableForm(false);
     }
-    document.querySelector('.notice__form').classList.toggle('notice__form--disabled', enable);
   };
 
-  // Активации формы и карты
-  window.layoutActivate = function () {
-    map.classList.remove('map--faded');
-    pinElementContainer.appendChild(window.fragmentPin);
-    window.disableForm(false);
+  // Функция делает массив из элементов селектора
+  var valuesToArray = function (element) {
+    var values = [];
+    [].forEach.call(element.options, function (item) {
+      values.push(item.value);
+    });
+    return values;
+  };
+  var flatTypeValues = valuesToArray(flatType);
+  var roomNumberValues = valuesToArray(roomNumber);
+  var roomCapacityValues = valuesToArray(roomCapacity);
+
+  // Callback функция синхронизации времени заезда и выезда
+  var syncValues = function (element, value) {
+    element.value = value;
   };
 
-  // Синхронизирую время въезда и выезда
-  timeInSelect.addEventListener('change', function () {
-    syncTime(timeOutSelect, timeInSelect);
-  });
+  // Callback функция синхронизации типа жилья и стоимости за ночь
+  var syncValueWithMin = function (element, value) {
+    element.min = value;
+  };
 
-  timeOutSelect.addEventListener('change', function () {
-    syncTime(timeInSelect, timeOutSelect);
-  });
+  // Синхронизация полей
+  var timeInSelectSync = function () {
+    window.sync(timeInSelect, timeOutSelect, window.CHECK_IN_TIMES, window.CHECK_OUT_TIMES, syncValues);
+  };
 
-  // Синхронизиркю минимальную цену и тип жилья
-  flatType.addEventListener('change', function () {
-    if (flatType.selectedIndex === 0) {
-      flatPrice.min = '1000';
-    }
-    if (flatType.selectedIndex === 1) {
-      flatPrice.min = '0';
-    }
-    if (flatType.selectedIndex === 2) {
-      flatPrice.min = '5000';
-    }
-    if (flatType.selectedIndex === 3) {
-      flatPrice.min = '10000';
-    }
-  });
+  var timeOutSelectSync = function () {
+    window.sync(timeOutSelect, timeInSelect, window.CHECK_OUT_TIMES, window.CHECK_IN_TIMES, syncValues);
+  };
 
-  // Синхронизирую количество комнат и количество гостей
-  roomNumber.addEventListener('change', function () {
-    if (roomNumber.selectedIndex === 0) {
-      roomCapacity.selectedIndex = 2;
-    }
-    if (roomNumber.selectedIndex === 1) {
-      roomCapacity.selectedIndex = 1;
-    }
-    if (roomNumber.selectedIndex === 2) {
-      roomCapacity.selectedIndex = 0;
-    }
-    if (roomNumber.selectedIndex === 3) {
-      roomCapacity.selectedIndex = 3;
-    }
-  });
+  var flatTypeSync = function () {
+    window.sync(flatType, flatPrice, flatTypeValues, window.MIN_PRICE, syncValueWithMin);
+  };
+
+  var roomNumberSelectSync = function () {
+    window.sync(roomNumber, roomCapacity, roomNumberValues, roomCapacityValues, syncValues);
+  };
+
+  var roomCapacitySelectSync = function () {
+    window.sync(roomCapacity, roomNumber, roomCapacityValues, roomNumberValues, syncValues);
+  };
+
+  // Listener для полей, которые будут синхронизироваться
+  timeInSelect.addEventListener('change', timeInSelectSync);
+  timeOutSelect.addEventListener('change', timeOutSelectSync);
+  flatType.addEventListener('change', flatTypeSync);
+  roomNumber.addEventListener('change', roomNumberSelectSync);
+  roomCapacity.addEventListener('change', roomCapacitySelectSync);
 
   // Проверка заголовка объявления
   title.addEventListener('invalid', function () {

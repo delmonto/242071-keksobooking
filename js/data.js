@@ -3,9 +3,10 @@
 (function () {
 // Данные для объявлений
   var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-  var TYPES = ['flat', 'house', 'bungalo'];
-  var CHECK_IN_TIMES = ['12:00', '13:00', '14:00'];
-  var CHECK_OUT_TIMES = ['12:00', '13:00', '14:00'];
+  window.TYPES = ['flat', 'house', 'bungalo'];
+  window.MIN_PRICE = ['1000', '0', '5000', '10000'];
+  window.CHECK_IN_TIMES = ['12:00', '13:00', '14:00'];
+  window.CHECK_OUT_TIMES = ['12:00', '13:00', '14:00'];
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   window.featuresRandom = FEATURES.sort(compareRandom).splice(randomValue(0, 3), randomValue(3, 5));
 
@@ -41,11 +42,11 @@
           title: TITLES[i],
           address: LOCATION_X + ', ' + LOCATION_Y,
           price: randomValue(1000, 1000000),
-          type: TYPES[randomValue(0, 2)],
+          type: window.TYPES[randomValue(0, 2)],
           rooms: randomValue(1, 5),
           guests: randomValue(1, 10),
-          checkin: CHECK_IN_TIMES[randomValue(0, 2)],
-          checkout: CHECK_OUT_TIMES[randomValue(0, 2)],
+          checkin: window.CHECK_IN_TIMES[randomValue(0, 2)],
+          checkout: window.CHECK_OUT_TIMES[randomValue(0, 2)],
           features: window.featuresRandom,
           description: '',
           photos: []
