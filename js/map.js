@@ -1,9 +1,15 @@
 'use strict';
 
 (function () {
-  window.ads = window.generateAdsInfo();
-  window.addPinsToFragment(window.ads);
+  window.ads = window.data.generateAdsInfo();
+  // window.addPinsToFragment(window.ads);
   window.form.disableForm(true);
+
+  var renderLoadedPins = function (data) {
+    window.addPinsToFragment(data);
+  };
+  window.backend.load(renderLoadedPins, window.utils.showErrorMessage);
+
 
   window.mainPin.addEventListener('mouseup', function () {
     window.form.layoutActivate();

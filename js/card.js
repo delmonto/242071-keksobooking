@@ -2,7 +2,6 @@
 
 (function () {
   // Шаблон для объявления
-
   var adTemplate = document.querySelector('template').content.querySelector('article.map__card');
 
   // Заполнение шаблона объявления данными
