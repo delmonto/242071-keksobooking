@@ -21,18 +21,14 @@
     }
     adElement.querySelector('h4 + p').innerHTML = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей'; // Количество гостей и комнат
     adElement.querySelector('p:nth-child(8)').innerHTML = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout; // Время заезда и выезда
-    // Иконки доступных удобств. Очищаю всех потомков .popup__features
-    adElement.querySelector('.popup__features').removeChild(adElement.querySelector('.popup__features li'));
-    while (adElement.querySelector('.popup__features').lastChild) {
-      adElement.querySelector('.popup__features').removeChild(adElement.querySelector('.popup__features').lastChild);
-    }
-    // Вставляю новые строки <li>, содержащие информацию о доступных удобствах
-    for (var i = 0; i < window.featuresRandom.length; i++) {
-      var yyy = '<li class="feature feature--' + window.featuresRandom[i] + '"></li>';
-      adElement.querySelector('.popup__features').insertAdjacentHTML('beforeend', yyy);
-    }
+    // Списки удобств
+    adElement.querySelector('.popup__features').innerHTML = '';
+    adElement.querySelector('.popup__features').insertAdjacentHTML('beforeend', ad.offer.features.map(window.utils.getFeaturesList).join(' '));
     // Описание
     adElement.querySelector('ul + p').innerHTML = ad.offer.description;
+    // Фото квартир
+    adElement.querySelector('.popup__pictures').innerHTML = '';
+    adElement.querySelector('.popup__pictures').insertAdjacentHTML('beforeend', ad.offer.photos.map(window.utils.getPhotosList).join(' '));
     return adElement;
   };
 

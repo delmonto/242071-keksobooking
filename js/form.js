@@ -125,5 +125,15 @@
       price.style.border = 'none';
     }
   });
+
+  function getDataSend() {
+    form.reset();
+  }
+
+  var form = document.querySelector('.notice__form');
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(form), getDataSend, window.utils.showErrorMessage);
+  });
 }
 )();
