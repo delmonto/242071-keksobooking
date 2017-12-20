@@ -13,7 +13,7 @@
     }
     clickedElement = evt.currentTarget;
     var pinId = clickedElement.dataset.pinId;
-    adElementContainer.appendChild(window.fillAds(window.ads[pinId]));
+    adElementContainer.appendChild(window.fillAds(window.adsData[pinId]));
     clickedElement.classList.add('map__pin--active');
     var closeButton = document.querySelector('.popup__close');
     closeButton.addEventListener('click', closePin);
@@ -24,7 +24,6 @@
     });
     document.addEventListener('keydown', onEscPress);
   };
-
   // Закрыть объявление
   function closePin() {
     clickedElement.classList.remove('map__pin--active');

@@ -22,7 +22,8 @@
   }
 
   // Добавление всех пинов во фрагмент
-  window.addPinsToFragment = function (adsList) {
+  window.addPinsToFragment = function () {
+    var adsList = window.adsData;
     for (var j = 0; j < adsList.length; j++) {
       window.fragmentPin.appendChild(createPinTemplate(adsList[j], j));
     }
@@ -62,7 +63,7 @@
         window.mainPin.style.top = currentCoords.y + 'px';
       }
 
-      window.address.placeholder = 'x: ' + (currentCoords.x) + ', y: ' + (currentCoords.y + 10 + Math.round(pinHeight / 2));
+      window.address.value = 'x: ' + (currentCoords.x) + ', y: ' + (currentCoords.y + 10 + Math.round(pinHeight / 2));
     };
 
     var onMouseUp = function (upEvt) {
@@ -70,12 +71,9 @@
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-
     };
-
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-
   });
 }
 )();

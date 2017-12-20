@@ -55,15 +55,15 @@
 
   // Синхронизация полей
   var timeInSelectSync = function () {
-    window.sync(timeInSelect, timeOutSelect, window.CHECK_IN_TIMES, window.CHECK_OUT_TIMES, syncValues);
+    window.sync(timeInSelect, timeOutSelect, window.data.CHECK_IN_TIMES, window.data.CHECK_OUT_TIMES, syncValues);
   };
 
   var timeOutSelectSync = function () {
-    window.sync(timeOutSelect, timeInSelect, window.CHECK_OUT_TIMES, window.CHECK_IN_TIMES, syncValues);
+    window.sync(timeOutSelect, timeInSelect, window.data.CHECK_OUT_TIMES, window.data.CHECK_IN_TIMES, syncValues);
   };
 
   var flatTypeSync = function () {
-    window.sync(flatType, flatPrice, flatTypeValues, window.MIN_PRICE, syncValueWithMin);
+    window.sync(flatType, flatPrice, flatTypeValues, window.data.MIN_PRICE, syncValueWithMin);
   };
 
   var roomNumberSelectSync = function () {
@@ -124,6 +124,16 @@
       price.setCustomValidity('');
       price.style.border = 'none';
     }
+  });
+
+  function getDataSend() {
+    form.reset();
+  }
+
+  var form = document.querySelector('.notice__form');
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(form), getDataSend, window.utils.showErrorMessage);
   });
 }
 )();
