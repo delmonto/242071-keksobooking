@@ -11,7 +11,6 @@
   var title = document.querySelector('#title');
   var price = document.querySelector('#price');
   var map = document.querySelector('.map'); // Карта
-  var pinElementContainer = document.querySelector('.map__pins'); // Тут будут отрисованы пины
   window.address = document.querySelector('#address');
 
   window.form = {
@@ -26,7 +25,8 @@
     // Активации формы и карты
     layoutActivate: function () {
       map.classList.remove('map--faded');
-      pinElementContainer.appendChild(window.fragmentPin);
+      window.addPinsToFragment(window.adsData);
+      window.pinElementContainer.appendChild(window.fragmentPin);
       window.form.disableForm(false);
     }
   };
