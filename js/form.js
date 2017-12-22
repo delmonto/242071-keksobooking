@@ -11,7 +11,6 @@
   var title = document.querySelector('#title');
   var price = document.querySelector('#price');
   var map = document.querySelector('.map'); // Карта
-  window.address = document.querySelector('#address');
 
   window.form = {
     // Включить / Выключить форму
@@ -25,10 +24,12 @@
     // Активации формы и карты
     layoutActivate: function () {
       map.classList.remove('map--faded');
-      window.addPinsToFragment(window.adsData);
-      window.pinElementContainer.appendChild(window.fragmentPin);
+      window.pin.addPinsToFragment(window.adsData);
+      window.pin.pinElementContainer.appendChild(window.pin.fragmentPin);
       window.form.disableForm(false);
-    }
+    },
+
+    address: document.querySelector('#address')
   };
 
   // Функция делает массив из элементов селектора
@@ -99,13 +100,13 @@
   });
 
   // Проверка адреса
-  window.address.addEventListener('invalid', function () {
-    if (window.address.validity.valueMissing) {
-      window.address.setCustomValidity('Обязательное поле');
-      window.address.style.border = '2px solid red';
+  window.form.address.addEventListener('invalid', function () {
+    if (window.form.address.validity.valueMissing) {
+      window.form.address.setCustomValidity('Обязательное поле');
+      window.form.address.style.border = '2px solid red';
     } else {
-      window.address.setCustomValidity('');
-      window.address.style.border = 'none';
+      window.form.address.setCustomValidity('');
+      window.form.address.style.border = 'none';
     }
   });
 
@@ -128,6 +129,7 @@
 
   function getDataSend() {
     form.reset();
+    window.form.address.value = 'x: ' + (window.startCoords.x) + ', y: ' + (window.startCoords.y + 10);
   }
 
   var form = document.querySelector('.notice__form');

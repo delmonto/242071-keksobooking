@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
-  window.sync = function (element1, element2, arr1, arr2, callback) {
+  window.sync = function (element1, element2, arr1, arr2, cb) {
     var index = arr1.indexOf(element1.value);
     var value = arr2[index];
-    callback(element2, value);
+    cb(element2, value);
   };
 })();
