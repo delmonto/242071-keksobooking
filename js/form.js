@@ -27,6 +27,7 @@
       window.pin.addPinsToFragment(window.adsData);
       window.pin.pinElementContainer.appendChild(window.pin.fragmentPin);
       window.form.disableForm(false);
+      setTimeout(window.updatePins, 0);
     },
 
     address: document.querySelector('#address')

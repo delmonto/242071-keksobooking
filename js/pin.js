@@ -24,7 +24,7 @@
       window.clearTimeout(lastTimeout);
     }
     lastTimeout = window.setTimeout(function () {
-      updatePins();
+      window.updatePins();
     }, 500);
   };
 
@@ -46,7 +46,7 @@
 
   var formFilter = document.querySelector('.map__filters-container');
   //  Функция обновляет список пинов, после применения фильтра
-  var updatePins = function () {
+  window.updatePins = function () {
     window.updateTimeout = 0;
     // Функция опеределяет в каком диапазоне находится цена
     var priceToRange = function (price) {
