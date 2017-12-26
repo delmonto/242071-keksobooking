@@ -13,7 +13,7 @@
     }
     clickedElement = evt.currentTarget;
     var pinId = clickedElement.dataset.pinId;
-    adElementContainer.appendChild(window.fillAds(window.adsData[pinId]));
+    adElementContainer.appendChild(window.fillAd(window.adsData[pinId]));
     clickedElement.classList.add('map__pin--active');
     var closeButton = document.querySelector('.popup__close');
     closeButton.addEventListener('click', closePin);
@@ -25,7 +25,7 @@
     document.addEventListener('keydown', onEscPress);
   };
   // Закрыть объявление
-  function closePin() {
+  var closePin = function () {
     clickedElement.classList.remove('map__pin--active');
     var closeButton = document.querySelector('.popup__close');
     closeButton.removeEventListener('click', closePin);
@@ -33,12 +33,12 @@
     adElementContainer.removeChild(adElement);
     clickedElement = null;
     document.removeEventListener('keydown', onEscPress);
-  }
+  };
 
   // Обработчик закрытия объявления по нажатию на esc
-  function onEscPress(evt) {
+  var onEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closePin();
     }
-  }
+  };
 })();

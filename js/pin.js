@@ -1,12 +1,33 @@
 'use strict';
 
 (function () {
-  window.mainPin = document.querySelector('.map__pin--main'); // Большой пин с кексом
-  // Шаблон для пина
-  window.fragmentPin = document.createDocumentFragment(); // Фрагент для пинов
-  var pinHeight = window.mainPin.offsetHeight;
 
-  function createPinTemplate(pin, pinId) {
+  window.pin = {
+    address: document.querySelector('#address'),
+    mainPin: document.querySelector('.map__pin--main'),
+    fragmentPin: document.createDocumentFragment(), // Фрагент для пинов
+    pinElementContainer: document.querySelector('.map__pins'), // Тут будут отрисованы пины
+
+    // Добавление всех пинов во фрагмент
+    addPinsToFragment: function (obj) {
+      for (var j = 0; j < obj.length; j++) {
+        window.pin.fragmentPin.appendChild(createPinTemplate(obj[j], j));
+      }
+    }
+  };
+
+  var lastTimeout;
+  var debounce = function () {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(function () {
+      window.updatePins();
+    }, 500);
+  };
+
+  // Шаблон для пина
+  var createPinTemplate = function (pin, pinId) {
     var newPin = document.createElement('button');
     newPin.style.left = (pin.location.x - 20) + 'px';
     newPin.style.top = (pin.location.y - 40) + 'px';
@@ -19,61 +40,69 @@
     newPin.appendChild(img);
     newPin.dataset.pinId = pinId;
     return newPin;
-  }
-
-  // Добавление всех пинов во фрагмент
-  window.addPinsToFragment = function () {
-    var adsList = window.adsData;
-    for (var j = 0; j < adsList.length; j++) {
-      window.fragmentPin.appendChild(createPinTemplate(adsList[j], j));
-    }
   };
 
-  window.mainPin.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-
-    // Определение текущих координат
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
-
-    // Функция определения координат смещения
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-      // Координаты смещения
-      var shiftCoords = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
-      // Конечные координаты
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-      // Текущие координаты пина
-      var currentCoords = {
-        x: window.mainPin.offsetLeft - shiftCoords.x,
-        y: window.mainPin.offsetTop - shiftCoords.y
-      };
-
-      window.mainPin.style.left = currentCoords.x + 'px';
-
-      if (currentCoords.y >= 100 && currentCoords.y <= 500) {
-        window.mainPin.style.top = currentCoords.y + 'px';
+  var formFilter = document.querySelector('.map__filters-container');
+  //  Функция обновляет список пинов, после применения фильтра
+  window.updatePins = function () {
+    window.updateTimeout = 0;
+    // Функция опеределяет в каком диапазоне находится цена
+    var priceToRange = function (price) {
+      if (housingPrice.value === null) {
+        return true;
+      } else if (housingPrice.value === 'low') {
+        return price < 10000;
+      } else if (housingPrice.value === 'high') {
+        return price > 50000;
       }
-
-      window.address.value = 'x: ' + (currentCoords.x) + ', y: ' + (currentCoords.y + 10 + Math.round(pinHeight / 2));
+      return price >= 10000 && price <= 50000;
     };
 
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
+    var checkedFeatures = document.querySelectorAll('[name=features]:checked');
 
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
+    // Фильтрация массива по условиям
+    var filteredPins = window.adsData.filter(function (ad) {
+      return ad.offer.type === housingType.value || housingType.value === 'any';
+    }).filter(function (ad) {
+      return priceToRange(ad.offer.price) || housingPrice.value === 'any';
+    }).filter(function (ad) {
+      return ad.offer.rooms + '' === housingRooms.value || housingRooms.value === 'any';
+    }).filter(function (ad) {
+      return ad.offer.guests + '' === housingGuests.value || housingGuests.value === 'any';
+    }).filter(function (ad) {
+      for (var i = 0; i < checkedFeatures.length; i++) {
+        if (ad.offer.features.indexOf(checkedFeatures[i].value) === -1) {
+          return 0;
+        }
+      }
+      return 1;
+    }).slice(0, 6);
+
+    for (var i = 0; i < window.mapPins.length; i++) {
+      window.mapPins[i].style.display = 'none';
+    }
+
+    for (var j = 0; j < filteredPins.length; j++) {
+      window.mapPins[window.adsData.indexOf(filteredPins[j])].style.display = '';
+    }
+
+  };
+
+  var housingType = formFilter.querySelector('#housing-type');
+  housingType.addEventListener('change', debounce);
+
+  var housingPrice = formFilter.querySelector('#housing-price');
+  housingPrice.addEventListener('change', debounce);
+
+  var housingRooms = formFilter.querySelector('#housing-rooms');
+  housingRooms.addEventListener('change', debounce);
+
+  var housingGuests = formFilter.querySelector('#housing-guests');
+  housingGuests.addEventListener('change', debounce);
+
+  var housingFeatures = formFilter.querySelectorAll('[name=features]');
+  for (var i = 0; i < housingFeatures.length; i++) {
+    housingFeatures[i].addEventListener('change', debounce);
+  }
 }
 )();

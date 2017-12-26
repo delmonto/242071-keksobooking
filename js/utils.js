@@ -2,23 +2,6 @@
 
 (function () {
   window.utils = {
-
-    // Случайное значение в пределах от min до max
-    randomValue: function (min, max) {
-      var rand = Math.random() * (max - min) + min;
-      return rand.toFixed(0);
-    },
-
-    // Сортирует массив случайным образом
-    compareRandom: function () {
-      return Math.random() - 0.5;
-    },
-
-    // Возвращает ссылку на аватар
-    getAvatarLink: function (indexNumber) {
-      var avatarLink = 'img/avatars/user0' + indexNumber + '.png';
-      return avatarLink;
-    },
     // Фотографии квартир
     getPhotosList: function (element) {
       return '<li><img src="' + element + '" width="' + 40 + '"></li>';
@@ -45,6 +28,5 @@
       errorNotification.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', errorNotification);
     }
-
   };
 })();
