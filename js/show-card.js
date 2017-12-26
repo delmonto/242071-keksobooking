@@ -13,7 +13,7 @@
     }
     clickedElement = evt.currentTarget;
     var pinId = clickedElement.dataset.pinId;
-    adElementContainer.appendChild(window.fillAds(window.adsData[pinId]));
+    adElementContainer.appendChild(window.fillAd(window.adsData[pinId]));
     clickedElement.classList.add('map__pin--active');
     var closeButton = document.querySelector('.popup__close');
     closeButton.addEventListener('click', closePin);

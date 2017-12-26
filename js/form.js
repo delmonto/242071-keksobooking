@@ -11,6 +11,11 @@
   var title = document.querySelector('#title');
   var price = document.querySelector('#price');
   var map = document.querySelector('.map'); // Карта
+  var address = document.querySelector('#address');
+
+  var MIN_PRICE = ['1000', '0', '5000', '10000'];
+  var CHECK_IN_TIMES = ['12:00', '13:00', '14:00'];
+  var CHECK_OUT_TIMES = ['12:00', '13:00', '14:00'];
 
   window.form = {
     // Включить / Выключить форму
@@ -28,9 +33,7 @@
       window.pin.pinElementContainer.appendChild(window.pin.fragmentPin);
       window.form.disableForm(false);
       setTimeout(window.updatePins, 0);
-    },
-
-    address: document.querySelector('#address')
+    }
   };
 
   // Функция делает массив из элементов селектора
@@ -53,19 +56,20 @@
   // Callback функция синхронизации типа жилья и стоимости за ночь
   var syncValueWithMin = function (element, value) {
     element.min = value;
+    element.value = value;
   };
 
   // Синхронизация полей
   var timeInSelectSync = function () {
-    window.sync(timeInSelect, timeOutSelect, window.data.CHECK_IN_TIMES, window.data.CHECK_OUT_TIMES, syncValues);
+    window.sync(timeInSelect, timeOutSelect, CHECK_IN_TIMES, CHECK_OUT_TIMES, syncValues);
   };
 
   var timeOutSelectSync = function () {
-    window.sync(timeOutSelect, timeInSelect, window.data.CHECK_OUT_TIMES, window.data.CHECK_IN_TIMES, syncValues);
+    window.sync(timeOutSelect, timeInSelect, CHECK_OUT_TIMES, CHECK_IN_TIMES, syncValues);
   };
 
   var flatTypeSync = function () {
-    window.sync(flatType, flatPrice, flatTypeValues, window.data.MIN_PRICE, syncValueWithMin);
+    window.sync(flatType, flatPrice, flatTypeValues, MIN_PRICE, syncValueWithMin);
   };
 
   var roomNumberSelectSync = function () {
@@ -101,7 +105,7 @@
   });
 
   // Проверка адреса
-  window.form.address.addEventListener('invalid', function () {
+  address.addEventListener('invalid', function () {
     if (window.form.address.validity.valueMissing) {
       window.form.address.setCustomValidity('Обязательное поле');
       window.form.address.style.border = '2px solid red';
@@ -130,7 +134,7 @@
 
   function getDataSend() {
     form.reset();
-    window.form.address.value = 'x: ' + (window.startCoords.x) + ', y: ' + (window.startCoords.y + 10);
+    address.value = 'x: ' + (window.startCoords.x) + ', y: ' + (window.startCoords.y + 10);
   }
 
   var form = document.querySelector('.notice__form');

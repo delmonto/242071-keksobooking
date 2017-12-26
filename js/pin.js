@@ -16,8 +16,6 @@
     }
   };
 
-  var pinHeight = window.pin.mainPin.offsetHeight;
-
   var lastTimeout;
   var debounce = function () {
     if (lastTimeout) {
@@ -63,22 +61,23 @@
     var checkedFeatures = document.querySelectorAll('[name=features]:checked');
 
     // Фильтрация массива по условиям
-    var filteredPins = window.adsData.filter(function (it) {
-      return it.offer.type === housingType.value || housingType.value === 'any';
-    }).filter(function (it) {
-      return priceToRange(it.offer.price) || housingPrice.value === 'any';
-    }).filter(function (it) {
-      return it.offer.rooms + '' === housingRooms.value || housingRooms.value === 'any';
-    }).filter(function (it) {
-      return it.offer.guests + '' === housingGuests.value || housingGuests.value === 'any';
-    }).filter(function (it) {
+    var filteredPins = window.adsData.filter(function (ad) {
+      return ad.offer.type === housingType.value || housingType.value === 'any';
+    }).filter(function (ad) {
+      return priceToRange(ad.offer.price) || housingPrice.value === 'any';
+    }).filter(function (ad) {
+      return ad.offer.rooms + '' === housingRooms.value || housingRooms.value === 'any';
+    }).filter(function (ad) {
+      return ad.offer.guests + '' === housingGuests.value || housingGuests.value === 'any';
+    }).filter(function (ad) {
       for (var i = 0; i < checkedFeatures.length; i++) {
-        if (it.offer.features.indexOf(checkedFeatures[i].value) === -1) {
+        if (ad.offer.features.indexOf(checkedFeatures[i].value) === -1) {
           return 0;
         }
       }
       return 1;
     }).slice(0, 6);
+
     for (var i = 0; i < window.mapPins.length; i++) {
       window.mapPins[i].style.display = 'none';
     }
@@ -86,6 +85,7 @@
     for (var j = 0; j < filteredPins.length; j++) {
       window.mapPins[window.adsData.indexOf(filteredPins[j])].style.display = '';
     }
+
   };
 
   var housingType = formFilter.querySelector('#housing-type');
@@ -104,52 +104,5 @@
   for (var i = 0; i < housingFeatures.length; i++) {
     housingFeatures[i].addEventListener('change', debounce);
   }
-
-  window.pin.mainPin.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-
-    // Определение текущих координат
-    window.startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
-
-    // Функция определения координат смещения
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-      // Координаты смещения
-      var shiftCoords = {
-        x: window.startCoords.x - moveEvt.clientX,
-        y: window.startCoords.y - moveEvt.clientY
-      };
-      // Конечные координаты
-      window.startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-      // Текущие координаты пина
-      var currentCoords = {
-        x: window.pin.mainPin.offsetLeft - shiftCoords.x,
-        y: window.pin.mainPin.offsetTop - shiftCoords.y
-      };
-
-      window.pin.mainPin.style.left = currentCoords.x + 'px';
-
-      if (currentCoords.y >= 100 && currentCoords.y <= 500) {
-        window.pin.mainPin.style.top = currentCoords.y + 'px';
-      }
-
-      window.form.address.value = 'x: ' + (currentCoords.x) + ', y: ' + (currentCoords.y + 10 + Math.round(pinHeight / 2));
-    };
-
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-      window.form.address.value = 'x: ' + (window.startCoords.x) + ', y: ' + (window.startCoords.y + 10 + Math.round(pinHeight / 2));
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
 }
 )();
