@@ -8,7 +8,7 @@
 
   // Добавляю listener на пин только после загрузки всех данных
   var init = function () {
-    window.pin.mainPin.addEventListener('mouseup', function () {
+    window.pin.mainPin.addEventListener('mouseup', function runUp() {
       window.form.layoutActivate();
       // Добавляю все пины в массив
       window.mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -21,7 +21,9 @@
           }
         });
       }
+      window.pin.mainPin.removeEventListener('mouseup', runUp);
     });
+
   };
 
   window.form.disableForm(true);

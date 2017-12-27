@@ -65,7 +65,6 @@
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      address.value = 'x: ' + (window.startCoords.x) + ', y: ' + (window.startCoords.y + 10 + Math.round(pinHeight / 2));
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };

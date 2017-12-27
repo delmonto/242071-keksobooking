@@ -16,6 +16,9 @@
   var MIN_PRICE = ['1000', '0', '5000', '10000'];
   var CHECK_IN_TIMES = ['12:00', '13:00', '14:00'];
   var CHECK_OUT_TIMES = ['12:00', '13:00', '14:00'];
+  var ROOMS = ['1', '2', '3', '100'];
+  var GUESTS = ['1', '2', '3', '0'];
+  var ZERO_VALUE = '0';
 
   window.form = {
     // Включить / Выключить форму
@@ -45,18 +48,27 @@
     return values;
   };
   var flatTypeValues = valuesToArray(flatType);
-  var roomNumberValues = valuesToArray(roomNumber);
-  var roomCapacityValues = valuesToArray(roomCapacity);
 
   // Callback функция синхронизации времени заезда и выезда
   var syncValues = function (element, value) {
     element.value = value;
   };
 
+  var syncRoomsWithGuests = function (element, value) {
+    syncValues(element, value);
+
+    var currentValue = roomCapacity.value;
+
+    Array.from(roomCapacity.options).forEach(function (item) {
+      item.disabled = (item.value !== ZERO_VALUE) ? item.value > currentValue : item.value !== currentValue;
+    });
+  };
+
+
   // Callback функция синхронизации типа жилья и стоимости за ночь
   var syncValueWithMin = function (element, value) {
     element.min = value;
-    element.value = value;
+    element.placeholder = value;
   };
 
   // Синхронизация полей
@@ -73,11 +85,7 @@
   };
 
   var roomNumberSelectSync = function () {
-    window.sync(roomNumber, roomCapacity, roomNumberValues, roomCapacityValues, syncValues);
-  };
-
-  var roomCapacitySelectSync = function () {
-    window.sync(roomCapacity, roomNumber, roomCapacityValues, roomNumberValues, syncValues);
+    window.sync(roomNumber, roomCapacity, ROOMS, GUESTS, syncRoomsWithGuests);
   };
 
   // Listener для полей, которые будут синхронизироваться
@@ -85,7 +93,7 @@
   timeOutSelect.addEventListener('change', timeOutSelectSync);
   flatType.addEventListener('change', flatTypeSync);
   roomNumber.addEventListener('change', roomNumberSelectSync);
-  roomCapacity.addEventListener('change', roomCapacitySelectSync);
+  // roomCapacity.addEventListener('change', roomCapacitySelectSync);
 
   // Проверка заголовка объявления
   title.addEventListener('invalid', function () {
